@@ -1,0 +1,135 @@
+{
+    "name": "trimmomatic-pe",
+    "title": "Trimmomatic PE",
+    "summary": "Run Trimmomatic on paired-end data.",
+    "dxapi": "1.0.0",
+    "version": "0.0.1",
+    "categories": [
+        "Read Manipulation",
+        "RNA-Seq"
+    ],
+    "inputSpec": [
+        {
+            "patterns": [
+                "*.fq.gz",
+	        "*.fastq.gz"
+            ],
+            "name": "input_fq_gz_1",
+            "label": "Input gzipped paired-end FASTQ LEFT reads file",
+            "class": "file",
+            "optional": false
+        },
+        {
+            "patterns": [
+                "*.fq.gz",
+	        "*.fastq.gz"
+            ],
+            "name": "input_fq_gz_2",
+            "label": "Input gzipped paired-end FASTQ RIGHT reads file",
+            "class": "file",
+            "optional": false
+        },
+        {
+            "name": "ILLUMINACLIP",
+            "label": "ILLUMINACLIP parameter (file.fa:seedMismatches:palindromeClipThreshold:simpleClipThreshold)",
+            "class": "string",
+            "optional": false,
+            "default": "TruSeq3-PE-2.fa:2:30:10"
+        },
+        {
+            "name": "param1",
+            "label": "optional parameter 1",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param2",
+            "label": "optional parameter 2",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param3",
+            "label": "optional parameter 3",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param4",
+            "label": "optional parameter 4",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param5",
+            "label": "optional parameter 5",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param6",
+            "label": "optional parameter 6",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param7",
+            "label": "optional parameter 7",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param8",
+            "label": "optional parameter 8",
+            "class": "string",
+            "optional": true
+        }
+    ],
+    "outputSpec": [
+        {
+            "patterns": [
+                "*.gz"
+            ],
+            "name": "paired_output_fq_gz_1",
+            "label": "Paired output LEFT reads file",
+            "class": "file"
+        },
+        {
+            "patterns": [
+                "*.gz"
+            ],
+            "name": "unpaired_output_fq_gz_1",
+            "label": "Unpaired output LEFT reads file",
+            "class": "file"
+        },
+        {
+            "patterns": [
+                "*.gz"
+            ],
+            "name": "paired_output_fq_gz_2",
+            "label": "Paired output RIGHT reads file",
+            "class": "file"
+        },
+        {
+            "patterns": [
+                "*.gz"
+            ],
+            "name": "unpaired_output_fq_gz_2",
+            "label": "Unpaired output RIGHT reads file",
+            "class": "file"
+        },
+	{
+	    "name": "trim_log",
+            "label": "Trimming log file",
+            "class": "file"
+        }
+    ],
+    "runSpec": {
+        "interpreter": "bash",
+        "file": "src/trimmomatic-pe.sh",
+        "execDepends": [
+            {"name": "openjdk-8-jre"}
+        ]
+    },
+    "authorizedUsers": []
+}

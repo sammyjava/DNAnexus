@@ -1,0 +1,60 @@
+{
+  "name": "tophat-fasta",
+  "title": "Tophat Fasta",
+  "summary": "Run Tophat for a pair of reads against a FASTA target",
+  "tags": [
+    "RNA-Seq",
+    "Read Mapping"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "patterns": [
+        "*.fa.gz",
+        "*.fasta.gz"
+      ],
+      "label": "gzipped target FASTA file",
+      "optional": false,
+      "name": "target_fasta_gz",
+      "class": "file"
+    },
+    {
+      "patterns": [
+        "*.fq.gz",
+	"*.fastq.gz"
+      ],
+      "label": "gzipped reads 1 fastq file",
+      "optional": false,
+      "name": "reads_1_fq_gz",
+      "class": "file"
+    },
+    {
+      "patterns": [
+        "*.fq.gz",
+	"*.fastq.gz"
+      ],
+      "label": "gzipped reads 2 fastq file",
+      "optional": false,
+      "name": "reads_2_fq_gz",
+      "class": "file"
+    },
+    {
+      "default": 56,
+      "label": "mate inner distance",
+      "optional": false,
+      "name": "mate_inner_dist",
+      "class": "int"
+    }
+  ],
+  "outputSpec": [
+    {
+      "label": "gzipped tarball of tophat_out",
+      "name": "tophat_out_tar_gz",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  }
+}

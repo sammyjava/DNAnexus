@@ -1,0 +1,51 @@
+{
+  "name": "gunzip",
+  "title": "Gzip File Decompressor",
+  "summary": "Decompresses a file with gzip",
+  "tags": [
+    "File Manipulation"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "patterns": [
+        "*.fq",
+	"*.fastq"
+      ],
+      "label": "File",
+      "help": "A file to be decompressed with gzip.",
+      "name": "file",
+      "class": "file"
+    }
+  ],
+  "outputSpec": [
+    {
+      "label": "Decompressed file",
+      "help": "The file after being decompressed with gzip.",
+      "name": "file",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "bundledDependsByRegion": {
+      "aws:us-east-1": [
+        {
+          "name": "resources.tar.gz",
+          "id": {
+            "$dnanexus_link": "file-BgY1xX8087VXPY0jgxYQb5PQ"
+          }
+        }
+      ]
+    },
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem1_ssd1_x2"
+      }
+    },
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  },
+  "details": {
+    "whatsNew": "* 1.0.1: Introduced streaming; changed default instance type"
+  }
+}

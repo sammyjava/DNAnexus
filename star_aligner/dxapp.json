@@ -1,0 +1,140 @@
+{
+  "name": "star_aligner",
+  "title": "STAR Aligner",
+  "summary": "Maps FASTQ reads (paired or unpaired) to a reference transcriptome/genome with the STAR software",
+  "tags": [
+    "RNA-Seq"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "patterns": [
+        "*.fq.gz",
+        "*.fastq.gz",
+        "*.fq",
+        "*.fastq"
+      ],
+      "label": "Reads",
+      "help": "A plain or gzipped FASTQ file, with the reads to be mapped (or the left reads, for paired pairs).",
+      "name": "reads_fastqgz",
+      "class": "file"
+    },
+    {
+      "help": "(Optional) A plain or gzipped FASTQ file, with the right reads to be mapped (for paired reads).",
+      "label": "Reads (right mates)",
+      "patterns": [
+        "*.fq.gz",
+        "*.fastq.gz",
+        "*.fq",
+        "*.fastq"
+      ],
+      "optional": true,
+      "class": "file",
+      "name": "reads2_fastqgz"
+    },
+    {
+      "help": "A tar archive with the reference genome/transcriptome already indexed with STAR. See the STAR Genome/Transcriptome Indexer app for more.",
+      "suggestions": [
+        {
+          "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
+          "path": "/misc/star_aligner_indices",
+          "name": "Human GRCh37"
+        }
+      ],
+      "label": "STAR genome/transcriptome index",
+      "patterns": [
+        "*.star-index.tar"
+      ],
+      "class": "file",
+      "name": "genomeindex_tar"
+    },
+    {
+      "group": "Common",
+      "help": "(Optional) A string, without spaces, that will be used to name the output BAM file. If not provided, the output file will be named after the input reads file.",
+      "label": "Sample name",
+      "optional": true,
+      "class": "string",
+      "name": "sample_name"
+    },
+    {
+      "group": "Common",
+      "help": "(Optional) Select 'RemoveNoncanonical' to filter out alignments that contain non-canonical junctions. Select 'RemoveNoncanonicalUnannotated' to filter out alignments that contain non-canonical unannotated junctions when using annotated splice junctions (the annotated non-canonical junctions will be kept). This will supply the '--outFilterIntronMotifs' option to STAR. If not given, STAR does not perform any filtering.",
+      "label": "Filter out alignments with non-canonical junctions",
+      "choices": [
+        "RemoveNoncanonical",
+        "RemoveNoncanonicalUnannotated"
+      ],
+      "optional": true,
+      "class": "string",
+      "name": "out_filter_intron_motifs"
+    },
+    {
+      "group": "Advanced",
+      "help": "Extra command line options that will be supplied directly to the STAR execution. WARNING: if provided, these extra options will be used in addition to any common options. Example: --outFilterMismatchNmax 5",
+      "label": "Extra command line options",
+      "optional": true,
+      "class": "string",
+      "name": "extra_options"
+    }
+  ],
+  "outputSpec": [
+    {
+      "patterns": [
+        "*.bam"
+      ],
+      "label": "Sorted mappings",
+      "help": "A coordinate-sorted BAM file with the resulting mappings.",
+      "name": "sorted_bam",
+      "class": "file"
+    },
+    {
+      "patterns": [
+        "*.splice_junctions.tsv"
+      ],
+      "label": "Splice junctions",
+      "help": "A tab-delimited text file with high-confidence collapsed splice junctions.",
+      "name": "sj_tsv",
+      "class": "file"
+    },
+    {
+      "patterns": [
+        "*.fasta",
+        "*.fastq"
+      ],
+      "label": "Unmapped reads",
+      "help": "Fastx files containing the unmapped reads.",
+      "name": "unmapped_fastx",
+      "class": "array:file"
+    }
+  ],
+  "runSpec": {
+    "bundledDependsByRegion": {
+      "aws:us-east-1": [
+        {
+          "name": "resources.tar.gz",
+          "id": {
+            "$dnanexus_link": "file-F0QFBK80fvGkP6PYx8BPxgq7"
+          }
+        }
+      ]
+    },
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem3_ssd1_x8"
+      }
+    },
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  },
+  "details": {
+    "upstreamUrl": "https://github.com/alexdobin/STAR",
+    "upstreamVersion": "2.4.0d",
+    "citations": [
+      "doi:10.1093/bioinformatics/bts635"
+    ],
+    "upstreamLicenses": [
+      "GPLv3"
+    ],
+    "whatsNew": ""
+  }
+}

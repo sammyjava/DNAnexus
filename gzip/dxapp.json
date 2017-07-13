@@ -1,0 +1,69 @@
+{
+  "name": "gzip",
+  "title": "Gzip File Compressor",
+  "summary": "Compresses a file with gzip",
+  "tags": [
+    "File Manipulation"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "label": "File",
+      "help": "A file to be compressed with gzip.",
+      "name": "file",
+      "class": "file"
+    },
+    {
+      "group": "Common",
+      "help": "The level of applied compression, with 9 being the best compression (slowest) and 1 being the least compression (fastest).",
+      "default": 6,
+      "label": "Compression level",
+      "choices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "class": "int",
+      "name": "compression_level"
+    }
+  ],
+  "outputSpec": [
+    {
+      "patterns": [
+        "*.gz"
+      ],
+      "label": "Compressed file",
+      "help": "The file after being compressed with gzip.",
+      "name": "file",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "bundledDependsByRegion": {
+      "aws:us-east-1": [
+        {
+          "name": "resources.tar.gz",
+          "id": {
+            "$dnanexus_link": "file-BgY1xX8087VXPY0jgxYQb5PQ"
+          }
+        }
+      ]
+    },
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem1_ssd1_x2"
+      }
+    },
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  },
+  "details": {
+    "whatsNew": "* 1.0.1: Introduced streaming; changed default instance type"
+  }
+}

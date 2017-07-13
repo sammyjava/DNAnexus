@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# copy the compiled/installed tophat files
+
+cp -r /usr/local/bin/intervaltree .
+cp -r /usr/local/bin/sortedcontainers .
+cp /usr/local/bin/samtools_0.1.18 .
+cp /usr/local/bin/prep_reads .
+cp /usr/local/bin/gtf_to_fasta .
+cp /usr/local/bin/fix_map_ordering .
+cp /usr/local/bin/bam2fastx .
+cp /usr/local/bin/segment_juncs .
+cp /usr/local/bin/juncs_db .
+cp /usr/local/bin/gtf_juncs .
+cp /usr/local/bin/long_spanning_reads .
+cp /usr/local/bin/bam_merge .
+cp /usr/local/bin/map2gtf .
+cp /usr/local/bin/tophat_reports .
+cp /usr/local/bin/sam_juncs .
+cp /usr/local/bin/tophat2 .
+cp /usr/local/bin/tophat .
+cp /usr/local/bin/contig_to_chr_coords .
+cp /usr/local/bin/bed_to_juncs .
+cp /usr/local/bin/sra_to_solid .
+cp /usr/local/bin/tophat-fusion-post .
+

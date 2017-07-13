@@ -1,0 +1,94 @@
+{
+    "name": "trimmomatic-se",
+    "title": "Trimmomatic SE",
+    "summary": "Run Trimmomatic on single-ended data.",
+    "dxapi": "1.0.0",
+    "version": "0.0.1",
+    "categories": [
+        "Read Manipulation",
+        "RNA-Seq"
+    ],
+    "inputSpec": [
+        {
+            "name": "input_fq",
+            "label": "Input single-ended FASTQ file",
+            "class": "file",
+            "optional": false
+        },
+        {
+            "name": "ILLUMINACLIP",
+            "label": "ILLUMINACLIP parameter (file.fa:seedMismatches:palindromeClipThreshold:simpleClipThreshold)",
+            "class": "string",
+            "optional": false,
+            "default": "TruSeq3-SE.fa:2:30:10"
+        },
+        {
+            "name": "param1",
+            "label": "optional parameter 1",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param2",
+            "label": "optional parameter 2",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param3",
+            "label": "optional parameter 3",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param4",
+            "label": "optional parameter 4",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param5",
+            "label": "optional parameter 5",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param6",
+            "label": "optional parameter 6",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param7",
+            "label": "optional parameter 7",
+            "class": "string",
+            "optional": true
+        },
+        {
+            "name": "param8",
+            "label": "optional parameter 8",
+            "class": "string",
+            "optional": true
+        }
+    ],
+    "outputSpec": [
+        {
+            "name": "output_fq",
+            "label": "Output single-ended FASTQ file",
+            "class": "file"
+        },
+	{
+	    "name": "trim_log",
+            "label": "Trimming log file",
+            "class": "file"
+        }
+    ],
+    "runSpec": {
+        "interpreter": "bash",
+        "file": "src/trimmomatic-se.sh",
+        "execDepends": [
+            {"name": "openjdk-8-jre"}
+        ]
+    },
+    "authorizedUsers": []
+}

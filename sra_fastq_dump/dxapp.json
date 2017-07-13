@@ -1,0 +1,40 @@
+{
+    "name": "sra_fastq_dump",
+    "title": "SRA FASTQ File Dumper",
+    "summary": "Runs NCBI's fastq-dump to retrieve the FASTQ file from a given SRR record.",
+    "tags": [
+        "Import",
+        "RNA-Seq"
+    ],
+    "dxapi": "1.0.0",
+    "access": {
+        "network": ["*"]
+    },
+    "inputSpec": [
+        {
+            "label": "SRR accession, e.g. SRR123456",
+            "optional": false,
+            "name": "srr_accession",
+            "class": "string"
+        }
+    ],
+    "outputSpec": [
+        {
+            "patterns": [
+                "*.fastq.gz"
+            ],
+            "label": "Output fastq files",
+            "name": "output_fastqs",
+            "class": "array:file"
+        }
+    ],
+    "runSpec": {
+        "systemRequirements": {
+            "main": {
+                "instanceType": "mem1_ssd1_x2"
+            }
+        },
+        "file": "src/code.sh",
+        "interpreter": "bash"
+    }
+}

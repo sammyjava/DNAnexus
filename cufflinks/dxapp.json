@@ -1,0 +1,64 @@
+{
+  "name": "cufflinks",
+  "title": "Cufflinks",
+  "summary": "Determines abundance of reads per isoform/gene from a BAM file and genome annotation in FPKM units.",
+  "tags": [
+    "RNA-Seq"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "patterns": [
+        "*.bam"
+      ],
+      "label": "Mappings",
+      "help": "A coordinate-sorted BAM file with the RNA-Seq mappings.",
+      "name": "sorted_bam",
+      "class": "file"
+    },
+    {
+      "patterns": [
+        "*.tuxedo_resource.tar.gz"
+      ],
+      "label": "Tuxedo resource archive",
+      "help": "A gzipped tar archive with the Tuxedo resources (genome and genes). See the Tuxedo Resource Builder for more information.",
+      "name": "tuxedo_resource_targz",
+      "class": "file"
+    },
+    {
+      "group": "Advanced",
+      "help": "Advanced command line options that will be supplied directly to the Cufflinks execution.",
+      "label": "Advanced command line options",
+      "optional": true,
+      "class": "string",
+      "name": "advanced_options"
+    }
+  ],
+  "outputSpec": [
+    {
+      "label": "Results",
+      "help": "A set of files as output by Cufflinks. See http://cufflinks.cbcb.umd.edu/manual.html#cufflinks_output for more information.",
+      "name": "results",
+      "class": "array:file"
+    }
+  ],
+  "runSpec": {
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem1_ssd1_x8"
+      }
+    },
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  },
+  "details": {
+    "upstreamUrl": "http://cufflinks.cbcb.umd.edu/",
+    "upstreamVersion": "2.1.1",
+    "citations": [
+      "doi:10.1038/nbt.2450"
+    ],
+    "upstreamLicenses": [
+      "Boost"
+    ]
+  }
+}

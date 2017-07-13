@@ -1,0 +1,81 @@
+{
+  "name": "tuxedo_resource_builder_l",
+  "title": "Tuxedo Protocol Resource Builder (large index)",
+  "summary": "Prepares a resource archive (genome and transcriptome sequences and indices) to use with the Tuxedo protocol apps",
+  "tags": [
+    "RNA-Seq"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "help": "A file, in gzipped tar archive format, with the reference genome sequence already indexed with Bowtie 2.",
+      "suggestions": [
+        {
+          "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
+          "path": "/human.genome/1000genomes_phase2_hs37d5",
+          "name": "GRCh37/hs37d5 (1000G Phase II)"
+        },
+        {
+          "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
+          "path": "/human.genome/1000genomes_phase1_b37",
+          "name": "GRCh37/b37 (1000G Phase I)"
+        },
+        {
+          "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
+          "path": "/human.genome/ucsc_hg19",
+          "name": "UCSC hg19"
+        },
+        {
+          "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
+          "path": "/human.genome/ion_torrent_hg19",
+          "name": "Ion Torrent hg19"
+        }
+      ],
+      "label": "Bowtie2 reference genome large index",
+      "patterns": [
+        "*.bt2l-index.tar.gz"
+      ],
+      "class": "file",
+      "name": "genomeindex_targz"
+    },
+    {
+      "patterns": [
+        "*.gtf.gz"
+      ],
+      "label": "Genes",
+      "help": "A file, in gzipped GTF format, containing the reference gene annotations.",
+      "name": "genes_gtfgz",
+      "class": "file"
+    }
+  ],
+  "outputSpec": [
+    {
+      "patterns": [
+        "*.tuxedo_resource.tar.gz"
+      ],
+      "label": "Tuxedo resource archive",
+      "help": "A gzipped tar archive with the Tuxedo resources.",
+      "name": "tuxedo_resource_targz",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem2_hdd2_x2"
+      }
+    },
+    "file": "src/code.sh",
+    "interpreter": "bash"
+  },
+  "details": {
+    "upstreamUrl": "http://tophat.cbcb.umd.edu/",
+    "upstreamVersion": "2.0.10",
+    "citations": [
+      "doi:10.1186/gb-2013-14-4-r36"
+    ],
+    "upstreamLicenses": [
+      "Artistic"
+    ]
+  }
+}

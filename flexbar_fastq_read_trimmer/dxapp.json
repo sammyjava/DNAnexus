@@ -1,0 +1,150 @@
+{
+    "name": "flexbar_fastq_read_trimmer",
+    "title": "Flexbar FASTQ Read Trimmer",
+    "summary": "Trims FASTQ reads by quality and/or position and/or removing adapters",
+    "tags": [
+        "Read Manipulation"
+    ],
+    "dxapi": "1.0.0",
+    "inputSpec": [
+        {
+            "help": "A file, in gzipped FASTQ format, with the reads to be trimmed (or the left reads, for paired pairs). This will supply the '-r' option to flexbar.",
+            "label": "Reads",
+            "patterns": [
+                "*.fq.gz",
+                "*.fastq.gz"
+            ],
+            "optional": false,
+            "class": "file",
+            "name": "reads_fastqgz"
+        },
+        {
+            "help": "(Optional) A file, in gzipped FASTQ format, with the right reads to be trimmed (for paired reads). This will supply the '-p' option to flexbar.",
+            "label": "Reads (right mates)",
+            "patterns": [
+                "*.fq.gz",
+                "*.fastq.gz"
+            ],
+            "optional": true,
+            "class": "file",
+            "name": "reads2_fastqgz"
+        },
+        {
+            "help": "(Optional) Fasta file with adapters for removal that may contain N. This will supply the '-a' option to flexbar.",
+            "label": "Adapters to trim",
+            "patterns": [
+                "*.fa",
+                "*.fasta"
+            ],
+            "optional": true,
+            "class": "file",
+            "name": "adapters_fasta"
+        },
+        {
+            "help": "(Optional) Fasta file with extra adapters for second read set in paired mode. This will supply the '-a2' option to flexbar.",
+            "label": "Adapters to trim from right reads",
+            "patterns": [
+                "*.fa",
+                "*.fasta"
+            ],
+            "optional": true,
+            "class": "file",
+            "name": "adapters2_fasta"
+        },
+        {
+            "group": "Common",
+            "help": "Select this if the quality scores in the input FASTQ files are encoded using PHRED-64 (Illumina 1.3-1.5) instead of PHRED-33 (Sanger, Illumina 1.8+). This will supply the '-f' option to flexbar.",
+            "default": false,
+            "label": "Quality scores encoded in PHRED-64 instead of PHRED-33?",
+            "class": "boolean",
+            "name": "phred64"
+        },
+        {
+            "group": "Common",
+            "help": "The maximum number of uncalled bases (N or .) allowed per read. Reads with more than those will be filtered. This will supply the '-u' option to flexbar.",
+            "default": 4,
+            "label": "Maximum number of Ns tolerated per read",
+            "class": "int",
+            "name": "max_uncalled"
+        },
+        {
+            "group": "Common",
+            "help": "Starting from the 3' end of each read, trim bases until a quality score equal or higher than this threshold is encountered (this number should be given without the 33 or 64 offset added). This will supply the '-q' option to flexbar.",
+            "default": 0,
+            "label": "Trim 3' bases lower than quality",
+            "class": "int",
+            "name": "trim_quality_threshold"
+        },
+        {
+            "group": "Common",
+            "help": "The number of bases to trim from the 5' end of the reads. This will supply the '-x' option to flexbar.",
+            "default": 0,
+            "label": "Number of bases to trim from 5' end",
+            "class": "int",
+            "name": "trim_left"
+        },
+        {
+            "group": "Common",
+            "help": "The number of bases to trim from the 3' end of the reads. This will supply the '-y' option to flexbar.",
+            "default": 0,
+            "label": "Number of bases to trim from 3' end",
+            "class": "int",
+            "name": "trim_right"
+        },
+        {
+            "group": "Common",
+            "help": "Discard reads whose length, after processing, is lower than this number. This will supply the '-m' option to flexbar.",
+            "default": 18,
+            "label": "Minimum read length allowed",
+            "class": "int",
+            "name": "min_length"
+        },
+        {
+            "group": "Advanced",
+            "help": "Advanced command line options that will be supplied directly to the flexbar execution. WARNING: if provided, these advanced options will be used INSTEAD of the common options. Example: -x 3 -f fastq-sanger",
+            "label": "Advanced command line options",
+            "optional": true,
+            "class": "string",
+            "name": "advanced_options"
+        }
+    ],
+    "outputSpec": [
+        {
+            "patterns": [
+                "*.fq.gz"
+            ],
+            "label": "Trimmed reads",
+            "name": "trimmed_reads_fastqgz",
+            "class": "file"
+        },
+        {
+            "patterns": [
+                "*.fq.gz"
+            ],
+            "label": "Trimmed reads (right mates)",
+            "optional": true,
+            "name": "trimmed_reads2_fastqgz",
+            "class": "file"
+        }
+    ],
+    "runSpec": {
+        "systemRequirements": {
+            "main": {
+                "instanceType": "mem1_ssd1_x4"
+            }
+        },
+        "file": "src/code.sh",
+        "interpreter": "bash"
+    },
+    "details": {
+        "upstreamUrl": "http://sourceforge.net/projects/flexbar/",
+        "upstreamVersion": "2.5",
+        "citations": [
+            "doi:10.3390/biology1030895"
+        ],
+        "upstreamLicenses": [
+            "GPLv3"
+        ],
+        "whatsNew": "* 1.2.1: Added optional FASTA input for -a and -a2 options\n* 1.2.0: Updated to flexbar 2.5; changed default instance type\n* 1.1.0: Updated to flexbar 2.4"
+    }
+}
