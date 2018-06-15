@@ -1,0 +1,156 @@
+{
+  "name": "cuffdiff",
+  "title": "Cuffdiff",
+  "summary": "Performs differential analysis to identify significant changes in transcript expression, splicing, and promoter use",
+  "tags": [
+    "RNA-Seq"
+  ],
+  "dxapi": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "sorted_bams",
+      "label": "Mappings",
+      "help": "Two or more coordinate-sorted BAM files (as output by TopHat) containing the fragment alignments to be analyzed. Each file will be regarded as a separate sample/condition, except for filenames matching the pattern '<samplename>.replicate-<N>.bam' (where <N> is a replicate index), which will be regarded as replicates of the same sample. At least two distinct samples (with or without replicates) are required to perform this analysis.",
+      "class": "array:file",
+      "patterns": ["*.bam"]
+    },
+    {
+      "name": "tuxedo_resource_targz",
+      "label": "Tuxedo resource archive",
+      "help": "A gzipped tar archive with the Tuxedo resources (genome and genes). See the Tuxedo Resource Builder for more information.",
+      "class": "file",
+      "patterns": ["*.tuxedo_resource.tar.gz"],
+      "suggestions": [
+        {
+          "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
+          "path": "/gene.models/iGenomes",
+          "region": "aws:us-east-1",
+          "name": "Illumina iGenomes"
+        }
+      ]
+    },
+    {
+      "name": "frag_bias_correct",
+      "label": "Perform sequence bias correction?",
+      "help": "(Optional) If selected, sequence bias correction will be performed. See http://cufflinks.cbcb.umd.edu/howitworks.html#hsbi for more information about the method. This will supply the '-b' option to Cuffdiff.",
+      "class": "boolean",
+      "optional": true,
+      "default": true,
+      "group": "Common"
+    },
+    {
+      "name": "multi_read_correct",
+      "label": "Perform multi-mapped read correction?",
+      "help": "(Optional) If selected, multi-mapped read correction will be performed. See http://cufflinks.cbcb.umd.edu/howitworks.html#hmul for more information about the method. This will supply the '-u' option to Cuffdiff.",
+      "class": "boolean",
+      "optional": true,
+      "default": true,
+      "group": "Common"
+    },
+    {
+      "name": "treat_as_time_series",
+      "label": "Treat samples as time series?",
+      "help": "(Optional) If selected, samples will be analyzed as a time series (rather than testing for differences between all pairs of samples). The input samples will be sorted alphabetically, and that will be interpreted as an increasing time order. This will supply the '-T' option to Cuffdiff.",
+      "class": "boolean",
+      "optional": true,
+      "group": "Common"
+    },
+    {
+      "name": "fdr",
+      "label": "False discovery rate",
+      "help": "(Optional) The allowed false discovery rate (used in differential expression testing). This will supply the '--FDR' option to Cuffdiff. If not given, Cuffdiff assumes a default value of 0.05.",
+      "class": "float",
+      "optional": true,
+      "group": "Common"
+    },
+    {
+      "name": "library_type",
+      "label": "Library type",
+      "help": "(Optional) The type of RNA-Seq protocol performed. See the app help for more information. This will supply the '--library-type' option to Cuffdiff. If not given, Cuffdiff will try to automatically infer the platform and protocol used to generate input reads.",
+      "class": "string",
+      "optional": true,
+      "choices": [
+        "fr-unstranded",
+        "fr-firststrand",
+        "fr-secondstrand"
+      ],
+      "group": "Common"
+    },
+    {
+      "name": "library_norm_method",
+      "label": "Library normalization method",
+      "help": "(Optional) The method used to normalize library size (sequencing depth). See the app help for more information. This will supply the '--library-norm-method' option to Cuffdiff. If not given, Cuffdiff assumes a default value of 'geometric'.",
+      "class": "string",
+      "optional": true,
+      "choices": [
+        "classic-fpkm",
+        "geometric",
+        "quartile"
+      ],
+      "group": "Common"
+    },
+    {
+      "name": "dispersion_method",
+      "label": "Dispersion method",
+      "help": "(Optional) The method used to estimate dispersion across replicates. See the app help for more information. This will supply the '--dispersion-method' option to Cuffdiff. If not given, Cuffdiff assumes a default value of 'pooled'.",
+      "class": "string",
+      "optional": true,
+      "choices": [
+        "pooled",
+        "per-condition",
+        "blind",
+        "poisson"
+      ],
+      "group": "Common"
+    },
+    {
+      "name": "extra_options",
+      "label": "Extra command line options",
+      "help": "Extra command line options that will be supplied directly to the Cuffdiff execution. WARNING: if provided, these extra options will be used in addition to any common options. Example: -u --total-hits-norm",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "results",
+      "label": "Results",
+      "help": "A set of files as output by Cuffdiff. See http://cufflinks.cbcb.umd.edu/manual.html#cuffdiff_output for more information.",
+      "class": "array:file"
+    },
+    {
+      "name": "vennt_html",
+      "label": "Vennt report",
+      "help": "An HTML file as output by Vennt. See http://drpowell.github.io/vennt/ for more information.",
+      "class": "file",
+      "patterns": ["*.html"]
+    }
+  ],
+  "runSpec": {
+    "file": "src/code.sh",
+    "interpreter": "bash",
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "details": {
+    "upstreamUrl": "http://cufflinks.cbcb.umd.edu/",
+    "upstreamVersion": "2.1.1",
+    "citations": [
+      "doi:10.1038/nbt.2450"
+    ],
+    "upstreamLicenses": [
+      "Boost"
+    ],
+    "whatsNew": "* 1.0.1: Added suggestions for the tuxedo resource archive input"
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {
+      "systemRequirements": {
+        "main": {
+          "instanceType": "mem1_ssd1_x8"
+        }
+      }
+    }
+  }
+}
