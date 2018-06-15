@@ -7,7 +7,9 @@ set -e -x
 #
 # Fetch input mappings
 #
-dx download "$sorted_bam" -o input.bam
+name=`dx describe "$sorted_bam" --name`
+dx download "$sorted_bam" -o "$name"
+input="$name"
 
 #
 # Fetch and uncompress resources
@@ -23,10 +25,16 @@ ln -s resources/genome/*.fa.fai genome.fa.fai
 test -e genes.gtf || dx-jobutil-report-error "Genes GTF file not found in Tuxedo resources"
 test -e genome.fa || dx-jobutil-report-error "Genome FASTA file not found in Tuxedo resources"
 
+# Add some options
+opts=""
+if [ "$library_type" != "" ]; then
+  opts="$opts --library-type $library_type"
+fi
+
 #
 # Run cufflinks
 #
-cufflinks -p `nproc` -o output $advanced_options -u -g genes.gtf -b genome.fa input.bam
+cufflinks -p `nproc` -o output $opts $advanced_options -u -g genes.gtf -b genome.fa $input
 
 #
 # Upload results

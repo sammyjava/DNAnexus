@@ -108,6 +108,8 @@
     }
   ],
   "runSpec": {
+    "distribution": "Ubuntu",
+    "release": "14.04",
     "bundledDependsByRegion": {
       "aws:us-east-1": [
         {

@@ -8,48 +8,54 @@
   "dxapi": "1.0.0",
   "inputSpec": [
     {
-      "patterns": [
-        "*.bam"
-      ],
+      "name": "sorted_bam",
       "label": "Mappings",
       "help": "A coordinate-sorted BAM file with the RNA-Seq mappings.",
-      "name": "sorted_bam",
-      "class": "file"
+      "class": "file",
+      "patterns": ["*.bam"]
     },
     {
-      "patterns": [
-        "*.tuxedo_resource.tar.gz"
-      ],
+      "name": "tuxedo_resource_targz",
       "label": "Tuxedo resource archive",
       "help": "A gzipped tar archive with the Tuxedo resources (genome and genes). See the Tuxedo Resource Builder for more information.",
-      "name": "tuxedo_resource_targz",
-      "class": "file"
+      "class": "file",
+      "patterns": ["*.tuxedo_resource.tar.gz"]
     },
     {
-      "group": "Advanced",
-      "help": "Advanced command line options that will be supplied directly to the Cufflinks execution.",
-      "label": "Advanced command line options",
-      "optional": true,
+      "name": "library_type",
+      "label": "Library type",
+      "help": "(Optional) The type of RNA-Seq protocol performed. See the app help for more information. This will supply the '--library-type' option to TopHat. If not given, TopHat assumes a default value of 'fr-unstranded'.",
       "class": "string",
-      "name": "advanced_options"
+      "optional": true,
+      "choices": [
+        "fr-unstranded",
+        "fr-firststrand",
+        "fr-secondstrand"
+      ],
+      "group": "Common"
+    },
+    {
+      "name": "advanced_options",
+      "label": "Advanced command line options",
+      "help": "Advanced command line options that will be supplied directly to the Cufflinks execution.",
+      "class": "string",
+      "optional": true,
+      "group": "Advanced"
     }
   ],
   "outputSpec": [
     {
+      "name": "results",
       "label": "Results",
       "help": "A set of files as output by Cufflinks. See http://cufflinks.cbcb.umd.edu/manual.html#cufflinks_output for more information.",
-      "name": "results",
       "class": "array:file"
     }
   ],
   "runSpec": {
-    "systemRequirements": {
-      "main": {
-        "instanceType": "mem1_ssd1_x8"
-      }
-    },
     "file": "src/code.sh",
-    "interpreter": "bash"
+    "interpreter": "bash",
+    "distribution": "Ubuntu",
+    "release": "14.04"
   },
   "details": {
     "upstreamUrl": "http://cufflinks.cbcb.umd.edu/",
@@ -60,5 +66,14 @@
     "upstreamLicenses": [
       "Boost"
     ]
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {
+      "systemRequirements": {
+        "main": {
+          "instanceType": "mem1_ssd1_x8"
+        }
+      }
+    }
   }
 }

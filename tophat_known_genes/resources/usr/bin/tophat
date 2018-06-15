@@ -23,8 +23,8 @@ import warnings
 import re
 import glob
 import signal
-from datetime import datetime
-from shutil import copy, rmtree, move
+from datetime import datetime, date, time
+from shutil import copy, rmtree
 import logging
 
 use_message = '''
@@ -100,7 +100,7 @@ Advanced Options:
     --max-segment-intron           <int>       [ default: 500000           ]
     --no-sort-bam                              (Output BAM is not coordinate-sorted)
     --no-convert-bam                           (Do not output bam format.
-                                                Output is <output_dir>/accepted_hits.sam)
+                                                Output is <output_dir>/accepted_hit.sam)
     --keep-fasta-order
     --allow-partial-mapping
 
@@ -182,7 +182,7 @@ use_BWT_FIFO = False # can only be set to True if use_zpacker is True and only w
 unmapped_reads_fifo = None # if use_BWT_FIFO is True, this tricks bowtie into writing the
                            # unmapped reads into a compressed file
 
-samtools_path = "samtools_0.1.18"
+samtools_path = None
 bowtie_path = None
 fail_str = "\t[FAILED]\n"
 gtf_juncs = None #file name with junctions extracted from given GFF file
@@ -288,8 +288,8 @@ def init_logger(log_fname):
     tophat_logger.addHandler(logfh)
     tophat_log=logfh.stream
 
-# TopHatParams captures all of the runtime parameters used by TopHat, and many
-# of these are passed as command line options to executables run by the pipeline
+# TopHatParams captures all of the runtime paramaters used by TopHat, and many
+# of these are passed as command line options to exectubles run by the pipeline
 
 # This class and its nested classes also do options parsing through parse_options()
 # and option validation via the member function check()
@@ -382,9 +382,7 @@ class TopHatParams:
             if self.zipper:
                 use_zpacker=True
                 if self.num_threads>1 and not self.zipper_opts:
-                    if self.zipper.endswith('pxz'):
-                         self.zipper_opts.append('-T'+str(self.num_threads))
-                    elif self.zipper.endswith('pbzip2') or self.zipper.endswith('pigz'):
+                    if self.zipper.endswith('pbzip2') or self.zipper.endswith('pigz'):
                          self.zipper_opts.append('-p'+str(self.num_threads))
             else:
                 use_zpacker=False
@@ -1157,7 +1155,7 @@ def nonzeroFile(filepath):
      fpath, fname=os.path.split(filepath)
      fbase, fext =os.path.splitext(fname)
      if fext.lower() == ".bam":
-         samtools_view_cmd = [samtools_path, "view", filepath]
+         samtools_view_cmd = ["samtools", "view", filepath]
          samtools_view = subprocess.Popen(samtools_view_cmd, stdout=subprocess.PIPE)
          head_cmd = ["head", "-1"]
          head = subprocess.Popen(head_cmd, stdin=samtools_view.stdout, stdout=subprocess.PIPE)
@@ -1288,21 +1286,9 @@ def check_bowtie_index(idx_prefix, is_bowtie2, add="(genome)"):
        os.path.exists(idx_rev_2):
         if os.path.exists(idx_prefix + ".1.ebwt") and os.path.exists(idx_prefix + ".1.bt2"):
             print >> sys.stderr, bwtbotherr
+
         return
     else:
-        if is_bowtie2:
-            idxext="bt2l"
-            bowtie_ver="2 "
-            idx_fwd_1 = idx_prefix + ".1."+idxext
-            idx_fwd_2 = idx_prefix + ".2."+idxext
-            idx_rev_1 = idx_prefix + ".rev.1."+idxext
-            idx_rev_2 = idx_prefix + ".rev.2."+idxext
-            if os.path.exists(idx_fwd_1) and \
-               os.path.exists(idx_fwd_2) and \
-               os.path.exists(idx_rev_1) and \
-               os.path.exists(idx_rev_2):
-                return
-            
         bwtidxerr="Error: Could not find Bowtie "+bowtie_ver+"index files (" + idx_prefix + ".*."+idxext+")"
 
         if is_bowtie2:
@@ -1567,16 +1553,15 @@ def get_samtools_version():
 
 # Make sure the SAM tools are installed and are recent enough to be useful
 def check_samtools():
-    #th_log("Checking for Samtools")
+    th_log("Checking for Samtools")
     global samtools_path
-    samtools_path=prog_path("samtools_0.1.18")
-    #samtools_version_str, samtools_version_arr = get_samtools_version()
-    #if samtools_version_str == None:
-    if not samtools_path:
-        die("Error: Required samtools version not found on this system")
-    #elif  samtools_version_arr[1] < 1 or samtools_version_arr[2] < 7:
-    #    die("Error: TopHat2 requires Samtools 0.1.19")
-    #th_logp("\t\tSamtools version:\t %s" % ".".join([str(x) for x in samtools_version_arr]))
+    samtools_path=prog_path("samtools")
+    samtools_version_str, samtools_version_arr = get_samtools_version()
+    if samtools_version_str == None:
+        die("Error: Samtools not found on this system")
+    elif  samtools_version_arr[1] < 1 or samtools_version_arr[2] < 7:
+        die("Error: TopHat requires Samtools 0.1.7 or later")
+    th_logp("\t\tSamtools version:\t %s" % ".".join([str(x) for x in samtools_version_arr]))
 
 
 
@@ -1771,8 +1756,6 @@ class ZReader:
           if guess:
              if s.endswith(".z") or s.endswith(".gz") or s.endswith(".gzip"):
                   pipecmd=['gzip']
-             elif s.endswith(".xz"):
-                  pipecmd=['xz']
              else:
                   if s.endswith(".bz2") or s.endswith(".bzip2") or s.endswith(".bzip"):
                        pipecmd=['bzip2']
@@ -1780,9 +1763,6 @@ class ZReader:
                  die("Error: cannot find %s to decompress input file %s " % (pipecmd, filename))
              if len(pipecmd)>0:
                 if pipecmd[0]=='gzip' and sys_params.zipper.endswith('pigz'):
-                   pipecmd[0]=sys_params.zipper
-                   pipecmd.extend(sys_params.zipper_opts)
-                elif pipecmd[0]=='xz' and sys_params.zipper.endswith('pxz'):
                    pipecmd[0]=sys_params.zipper
                    pipecmd.extend(sys_params.zipper_opts)
                 elif pipecmd[0]=='bzip2' and sys_params.zipper.endswith('pbzip2'):
@@ -2815,7 +2795,7 @@ def compile_reports(params, sam_header_filename, ref_fasta, mappings, readfiles,
             for bam_part in bam_parts:
                 os.remove(bam_part)
         else: # only one file
-            move(bam_parts[0], accepted_hits+".bam")
+            os.rename(bam_parts[0], accepted_hits+".bam")
             if not params.report_params.convert_bam:
                #just convert to .sam
                bam2sam_cmd = [samtools_path, "view", "-h", accepted_hits+".bam"]
@@ -2846,7 +2826,7 @@ def compile_reports(params, sam_header_filename, ref_fasta, mappings, readfiles,
 
       if len(um_parts) > 0:
           if len(um_parts)==1:
-            move(um_parts[0], um_merged)
+            os.rename(um_parts[0], um_merged)
           else:
             merge_cmd=[prog_path("bam_merge"), "-Q",
               "--sam-header", sam_header_filename, um_merged]
@@ -3806,7 +3786,7 @@ def prog_path(program):
     return progpath
 
 def get_version():
-   return "2.1.0"
+   return "2.0.12"
 
 def mlog(msg):
   print >> sys.stderr, "[DBGLOG]:"+msg

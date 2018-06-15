@@ -8,153 +8,137 @@
   "dxapi": "1.0.0",
   "inputSpec": [
     {
-      "patterns": [
-        "*.fq.gz",
-        "*.fastq.gz"
-      ],
+      "name": "reads_fastqgz",
       "label": "Reads",
       "help": "One or more files, in gzipped FASTQ format, with the reads to be mapped (or the left reads, for paired pairs).",
-      "name": "reads_fastqgz",
-      "class": "array:file"
-    },
-    {
-      "help": "(Optional) One or more files, in gzipped FASTQ format, with the right reads to be mapped (for paired reads).",
-      "label": "Reads (right mates)",
-      "patterns": [
-        "*.fq.gz",
-        "*.fastq.gz"
-      ],
-      "optional": true,
       "class": "array:file",
-      "name": "reads2_fastqgz"
+      "patterns": ["*.fq.gz", "*.fastq.gz"]
     },
     {
+      "name": "reads2_fastqgz",
+      "label": "Reads (right mates)",
+      "help": "(Optional) One or more files, in gzipped FASTQ format, with the right reads to be mapped (for paired reads).",
+      "class": "array:file",
+      "patterns": ["*.fq.gz", "*.fastq.gz"],
+      "optional": true
+    },
+    {
+      "name": "tuxedo_resource_targz",
+      "label": "Tuxedo resource archive",
       "help": "A gzipped tar archive with the Tuxedo resources (genome and genes). See the Tuxedo Resource Builder for more information.",
+      "class": "file",
+      "patterns": ["*.tuxedo_resource.tar.gz"],
       "suggestions": [
         {
           "project": "project-B6JG85Z2J35vb6Z7pQ9Q02j8",
           "path": "/gene.models/iGenomes",
+          "region": "aws:us-east-1",
           "name": "Illumina iGenomes"
         }
-      ],
-      "label": "Tuxedo resource archive",
-      "patterns": [
-        "*.tuxedo_resource.tar.gz"
-      ],
-      "class": "file",
-      "name": "tuxedo_resource_targz"
+      ]
     },
     {
-      "group": "Common",
-      "help": "(Optional) A string, without spaces, that will be used to name the output BAM file as well as the read group. If not provided, the output file will be named after the input reads file. If there are multiple replicates, it is important to provide the same name across all replicates of the same sample.",
+      "name": "sample_name",
       "label": "Sample name",
-      "optional": true,
+      "help": "(Optional) A string, without spaces, that will be used to name the output BAM file as well as the read group. If not provided, the output file will be named after the input reads file. If there are multiple replicates, it is important to provide the same name across all replicates of the same sample.",
       "class": "string",
-      "name": "sample_name"
+      "optional": true,
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "(Optional) If this sample has been sequenced in many replicates, the index of the replicate (1 for the first replicate, etc.). The output file will contain the suffix 'replicate-I' where I is the index. A sample name is also required in this case.",
+      "name": "replicate_index",
       "label": "Replicate index",
-      "optional": true,
+      "help": "(Optional) If this sample has been sequenced in many replicates, the index of the replicate (1 for the first replicate, etc.). The output file will contain the suffix 'replicate-I' where I is the index. A sample name is also required in this case.",
       "class": "int",
-      "name": "replicate_index"
+      "optional": true,
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "(Optional) The expected (mean) inner distance between mate pairs. For example, for paired-end runs with fragments selected at 300bp, where each read is 50bp, this parameter should be set to 200. This will supply the '-r' option to TopHat. If not given, TopHat assumes a default value of 50.",
+      "name": "mate_inner_dist",
       "label": "Mate inner distance",
-      "optional": true,
+      "help": "(Optional) The expected (mean) inner distance between mate pairs. For example, for paired-end runs with fragments selected at 300bp, where each read is 50bp, this parameter should be set to 200. This will supply the '-r' option to TopHat. If not given, TopHat assumes a default value of 50.",
       "class": "int",
-      "name": "mate_inner_dist"
+      "optional": true,
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "(Optional) The type of RNA-Seq protocol performed. See the app help for more information. This will supply the '--library-type' option to TopHat. If not given, TopHat assumes a default value of 'fr-unstranded'.",
+      "name": "library_type",
       "label": "Library type",
+      "help": "(Optional) The type of RNA-Seq protocol performed. See the app help for more information. This will supply the '--library-type' option to TopHat. If not given, TopHat assumes a default value of 'fr-unstranded'.",
+      "class": "string",
+      "optional": true,
       "choices": [
         "fr-unstranded",
         "fr-firststrand",
         "fr-secondstrand"
       ],
-      "optional": true,
-      "class": "string",
-      "name": "library_type"
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "(Optional) Bowtie 2, used by TopHat, supports certain preset mapping parameters, which trade-off between speed and sensitivity. Choose one of 'very-fast', 'fast', 'sensitive' or 'very-sensitive' to enable using one of these presets (this will supply the '--b2-very-fast', '--b2-fast', '--b2-sensitive' or '--b2-very-sensitive' option to TopHat). Leave this unselected to not supply a preset. (When not given any of these command-line options, TopHat uses parameters similar to 'sensitive').",
+      "name": "preset",
       "label": "Bowtie preset mode",
+      "help": "(Optional) Bowtie 2, used by TopHat, supports certain preset mapping parameters, which trade-off between speed and sensitivity. Choose one of 'very-fast', 'fast', 'sensitive' or 'very-sensitive' to enable using one of these presets (this will supply the '--b2-very-fast', '--b2-fast', '--b2-sensitive' or '--b2-very-sensitive' option to TopHat). Leave this unselected to not supply a preset. (When not given any of these command-line options, TopHat uses parameters similar to 'sensitive').",
+      "class": "string",
+      "optional": true,
       "choices": [
         "very-fast",
         "fast",
         "sensitive",
         "very-sensitive"
       ],
-      "optional": true,
-      "class": "string",
-      "name": "preset"
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "Select this if the quality scores in the input FASTQ files are encoded using PHRED-64 (Illumina 1.3-1.5) instead of PHRED-33 (Sanger, Illumina 1.8+). This will supply the '--solexa1.3-quals' option to TopHat. (By default, TopHat assumes the input is encoded using PHRED-33).",
+      "name": "phred64",
       "label": "Quality scores encoded in PHRED-64 instead of PHRED-33?",
-      "optional": true,
+      "help": "Select this if the quality scores in the input FASTQ files are encoded using PHRED-64 (Illumina 1.3-1.5) instead of PHRED-33 (Sanger, Illumina 1.8+). This will supply the '--solexa1.3-quals' option to TopHat. (By default, TopHat assumes the input is encoded using PHRED-33).",
       "class": "boolean",
-      "name": "phred64"
+      "optional": true,
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "(Optional) Select this to only align the reads to the known transcript annotations. Leave this unselected to map to the genome the reads that do not fully map to the known transcriptome.",
+      "name": "transcriptome_only",
       "label": "Only align the reads to the known transcriptome?",
-      "optional": true,
+      "help": "(Optional) Select this to only align the reads to the known transcript annotations. Leave this unselected to map to the genome the reads that do not fully map to the known transcriptome.",
       "class": "boolean",
-      "name": "transcriptome_only"
+      "optional": true,
+      "group": "Common"
     },
     {
-      "group": "Common",
-      "help": "(Optional) Select this to only look for reads across junctions indicated in the known transcript annotations.",
-      "default": true,
+      "name": "no_novel_juncs",
       "label": "Do not look for novel junctions?",
-      "optional": true,
+      "help": "(Optional) Select this to only look for reads across junctions indicated in the known transcript annotations.",
       "class": "boolean",
-      "name": "no_novel_juncs"
+      "optional": true,
+      "default": true,
+      "group": "Common"
     },
     {
-      "group": "Advanced",
-      "help": "Extra command line options that will be supplied directly to the TopHat execution. WARNING: if provided, these extra options will be used in addition to any common options. Example: --segment-length 30",
+      "name": "extra_options",
       "label": "Extra command line options",
-      "optional": true,
+      "help": "Extra command line options that will be supplied directly to the TopHat execution. WARNING: if provided, these extra options will be used in addition to any common options. Example: --segment-length 30",
       "class": "string",
-      "name": "extra_options"
+      "optional": true,
+      "group": "Advanced"
     }
   ],
   "outputSpec": [
     {
-      "patterns": [
-        "*.bam"
-      ],
+      "name": "sorted_bam",
       "label": "Sorted mappings",
       "help": "A coordinate-sorted BAM file with the resulting mappings.",
-      "name": "sorted_bam",
-      "class": "file"
+      "class": "file",
+      "patterns": ["*.bam"]
     },
     {
-      "patterns": [
-        "*.align_summary.txt"
-      ],
+      "name": "summary_txt",
       "label": "Alignment summary",
       "help": "A text file with alignment summary information as output by TopHat.",
-      "name": "summary_txt",
-      "class": "file"
+      "class": "file",
+      "patterns": ["*.align_summary.txt"]
     }
   ],
   "runSpec": {
-    "systemRequirements": {
-      "main": {
-        "instanceType": "mem1_ssd1_x8"
-      }
-    },
     "file": "src/code.sh",
     "interpreter": "bash"
   },
@@ -168,5 +152,14 @@
       "Artistic"
     ],
     "whatsNew": "* 1.1.0: Updated to tophat 2.0.12 and bowtie 2.2.3; patched samtools to fail if the disk every becomes full\n* 1.0.1: Added suggestions for the tuxedo resource archive input"
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {
+      "systemRequirements": {
+        "main": {
+          "instanceType": "mem1_ssd1_x8"
+        }
+      }
+    }
   }
 }
